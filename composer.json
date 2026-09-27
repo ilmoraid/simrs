@@ -56,10 +56,12 @@
             "@php artisan dev"
         ],
         "lint": [
-            "pint --parallel"
+            "pint --parallel",
+            "bun run check:fix"
         ],
         "lint:check": [
-            "pint --parallel --test"
+            "pint --parallel --test",
+            "bun run check"
         ],
         "ci:check": [
             "Composer\\Config::disableProcessTimeout",
@@ -68,7 +70,8 @@
             "@test"
         ],
         "types:check": [
-            "phpstan analyse"
+            "phpstan analyse",
+            "bun run types:check"
         ],
         "test": [
             "@php artisan config:clear --ansi",

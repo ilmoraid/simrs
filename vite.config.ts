@@ -29,6 +29,13 @@ export default defineConfig({
         }),
     ]),
     server: {
+        host: '0.0.0.0',
+        cors: {
+            origin: /^https?:\/\/ilmora\.ilmora\.orb\.local(:[0-9]+)?$/,
+        },
+        ws: {
+            host: 'ilmora.ilmora.orb.local',
+        },
         watch: {
             ignored: [
                 '**/.agents/**',
