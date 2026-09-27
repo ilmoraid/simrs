@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\User;
 
-use Database\Factories\UserFactory;
+use Database\Factories\User\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -28,11 +28,27 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property Carbon|null $updated_at
  */
 #[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
+#[
+    Hidden([
+        'password',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
+        'remember_token',
+    ]),
+]
 class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable;
+    use HasFactory,
+        Notifiable,
+        PasskeyAuthenticatable,
+        TwoFactorAuthenticatable;
+
+    /**
+     * Force Eloquent to use the tenant connection.
+     * Required if tenancy hasn't automatically overridden the default DB connection.
+     */
+    protected $connection = 'tenant';
 
     /**
      * Get the attributes that should be cast.

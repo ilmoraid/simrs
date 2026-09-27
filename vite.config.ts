@@ -31,7 +31,7 @@ export default defineConfig({
     server: {
         host: '0.0.0.0',
         cors: {
-            origin: /^https?:\/\/ilmora\.ilmora\.orb\.local(:[0-9]+)?$/,
+            origin: /^https?:\/\/([a-zA-Z0-9-]+\.)*ilmora\.ilmora\.orb\.local(:[0-9]+)?$/,
         },
         ws: {
             host: 'ilmora.ilmora.orb.local',
