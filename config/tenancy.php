@@ -8,6 +8,7 @@ use Stancl\Tenancy\Bootstrappers\CacheTenancyBootstrapper;
 use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 use Stancl\Tenancy\Bootstrappers\FilesystemTenancyBootstrapper;
 use Stancl\Tenancy\Bootstrappers\QueueTenancyBootstrapper;
+use Stancl\Tenancy\Bootstrappers\RedisTenancyBootstrapper;
 use Stancl\Tenancy\TenantDatabaseManagers\MySQLDatabaseManager;
 use Stancl\Tenancy\UUIDGenerator;
 
@@ -22,7 +23,10 @@ return [
      *
      * Only relevant if you're using the domain or subdomain identification middleware.
      */
-    'central_domains' => ['127.0.0.1', 'localhost', 'ilmora.ilmora.orb.local'],
+    'central_domains' => [
+        env('CENTRAL_DOMAIN', 'ilmora.ilmora.orb.local'),
+        'admin.ilmora.ilmora.orb.local',
+    ],
 
     /**
      * Tenancy bootstrappers are executed when tenancy is initialized.
@@ -35,7 +39,7 @@ return [
         CacheTenancyBootstrapper::class,
         FilesystemTenancyBootstrapper::class,
         QueueTenancyBootstrapper::class,
-        // Stancl\Tenancy\Bootstrappers\RedisTenancyBootstrapper::class, // Note: phpredis is needed
+        RedisTenancyBootstrapper::class, // Note: phpredis is needed
     ],
 
     /**

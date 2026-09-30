@@ -7,6 +7,7 @@ use App\Actions\Fortify\ResetUserPassword;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
@@ -21,7 +22,7 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        Fortify::ignoreRoutes();
     }
 
     /**
@@ -32,6 +33,12 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
+
+        /** Route macro */
+        Route::macro('fortifyTenant', [
+            self::class,
+            'registerFortifyTenantRoutes',
+        ]);
     }
 
     /**
@@ -48,32 +55,48 @@ class FortifyServiceProvider extends ServiceProvider
      */
     private function configureViews(): void
     {
-        Fortify::loginView(fn (Request $request) => Inertia::render('auth/login', [
-            'canResetPassword' => Features::enabled(Features::resetPasswords()),
-            'status' => $request->session()->get('status'),
-        ]));
+        Fortify::loginView(
+            fn (Request $request) => Inertia::render('auth/login', [
+                'canResetPassword' => Features::enabled(
+                    Features::resetPasswords(),
+                ),
+                'status' => $request->session()->get('status'),
+            ]),
+        );
 
-        Fortify::resetPasswordView(fn (Request $request) => Inertia::render('auth/reset-password', [
-            'email' => $request->email,
-            'token' => $request->route('token'),
-            'passwordRules' => Password::defaults()->toPasswordRulesString(),
-        ]));
+        Fortify::resetPasswordView(
+            fn (Request $request) => Inertia::render('auth/reset-password', [
+                'email' => $request->email,
+                'token' => $request->route('token'),
+                'passwordRules' => Password::defaults()->toPasswordRulesString(),
+            ]),
+        );
 
-        Fortify::requestPasswordResetLinkView(fn (Request $request) => Inertia::render('auth/forgot-password', [
-            'status' => $request->session()->get('status'),
-        ]));
+        Fortify::requestPasswordResetLinkView(
+            fn (Request $request) => Inertia::render('auth/forgot-password', [
+                'status' => $request->session()->get('status'),
+            ]),
+        );
 
-        Fortify::verifyEmailView(fn (Request $request) => Inertia::render('auth/verify-email', [
-            'status' => $request->session()->get('status'),
-        ]));
+        Fortify::verifyEmailView(
+            fn (Request $request) => Inertia::render('auth/verify-email', [
+                'status' => $request->session()->get('status'),
+            ]),
+        );
 
-        Fortify::registerView(fn () => Inertia::render('auth/register', [
-            'passwordRules' => Password::defaults()->toPasswordRulesString(),
-        ]));
+        Fortify::registerView(
+            fn () => Inertia::render('auth/register', [
+                'passwordRules' => Password::defaults()->toPasswordRulesString(),
+            ]),
+        );
 
-        Fortify::twoFactorChallengeView(fn () => Inertia::render('auth/two-factor-challenge'));
+        Fortify::twoFactorChallengeView(
+            fn () => Inertia::render('auth/two-factor-challenge'),
+        );
 
-        Fortify::confirmPasswordView(fn () => Inertia::render('auth/confirm-password'));
+        Fortify::confirmPasswordView(
+            fn () => Inertia::render('auth/confirm-password'),
+        );
     }
 
     /**
@@ -82,19 +105,36 @@ class FortifyServiceProvider extends ServiceProvider
     private function configureRateLimiting(): void
     {
         RateLimiter::for('two-factor', function (Request $request) {
-            return Limit::perMinute(5)->by($request->session()->get('login.id'));
+            return Limit::perMinute(5)->by(
+                $request->session()->get('login.id'),
+            );
         });
 
         RateLimiter::for('login', function (Request $request) {
-            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
+            $throttleKey = Str::transliterate(
+                Str::lower($request->input(Fortify::username())).
+                    '|'.
+                    $request->ip(),
+            );
 
             return Limit::perMinute(5)->by($throttleKey);
         });
 
         RateLimiter::for('passkeys', function (Request $request) {
             return Limit::perMinute(10)->by(
-                ($request->input('credential.id') ?: $request->session()->getId()).'|'.$request->ip(),
+                ($request->input('credential.id') ?:
+                    $request->session()->getId()).
+                    '|'.
+                    $request->ip(),
             );
         });
+    }
+
+    /**
+     * Dedicated method to handle Fortify vendor route loading under tenant scope.
+     */
+    public static function registerFortifyTenantRoutes(): void
+    {
+        require base_path('vendor/laravel/fortify/routes/routes.php');
     }
 }
