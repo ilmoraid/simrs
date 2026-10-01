@@ -80,6 +80,11 @@
             "@types:check",
             "@php artisan test"
         ],
+        "check:all": [
+            "@lint",
+            "@types:check",
+            "@php artisan optimize:clear"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
