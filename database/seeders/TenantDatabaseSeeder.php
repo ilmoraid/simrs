@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\Tenant\User\UserSeeder;
 use Illuminate\Database\Seeder;
 
 class TenantDatabaseSeeder extends Seeder
@@ -11,6 +12,6 @@ class TenantDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        $this->call(UserSeeder::class);
     }
 }

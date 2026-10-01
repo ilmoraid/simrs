@@ -17,12 +17,12 @@ class DatabaseSeeder extends Seeder
     {
         $tenant1 = Tenant::create();
         $tenant1->domains()->create([
-            'domain' => 'foo.'.config('tenancy.central_domains')[2],
+            'domain' => 'foo.'.config('tenancy.central_domains')[0],
         ]);
 
         $tenant2 = Tenant::create();
         $tenant2->domains()->create([
-            'domain' => 'bar.'.config('tenancy.central_domains')[2],
+            'domain' => 'bar.'.config('tenancy.central_domains')[0],
         ]);
     }
 }
