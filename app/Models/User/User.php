@@ -2,6 +2,7 @@
 
 namespace App\Models\User;
 
+use App\Concerns\HasUuids;
 use Database\Factories\User\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -14,6 +15,7 @@ use Illuminate\Support\Carbon;
 use Laravel\Fortify\Contracts\PasskeyUser;
 use Laravel\Fortify\PasskeyAuthenticatable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @property int $id
@@ -45,6 +47,8 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
         PasskeyAuthenticatable,
         TwoFactorAuthenticatable;
 
+    use HasRoles;
+    use HasUuids;
     use SoftDeletes;
 
     /**

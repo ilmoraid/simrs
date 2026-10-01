@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Tenant\Domain;
 use App\Models\Tenant\Tenant;
+use App\Tenancy\Bootstrapper\SpatiePermissionsBootstrapper;
 use Stancl\Tenancy\Bootstrappers\CacheTenancyBootstrapper;
 use Stancl\Tenancy\Bootstrappers\DatabaseTenancyBootstrapper;
 use Stancl\Tenancy\Bootstrappers\FilesystemTenancyBootstrapper;
@@ -40,6 +41,7 @@ return [
         FilesystemTenancyBootstrapper::class,
         QueueTenancyBootstrapper::class,
         RedisTenancyBootstrapper::class, // Note: phpredis is needed
+        SpatiePermissionsBootstrapper::class,
     ],
 
     /**

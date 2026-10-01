@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\Tenant\Authorization\PermissionSeeder;
 use Database\Seeders\Tenant\User\UserSeeder;
 use Illuminate\Database\Seeder;
 
@@ -12,6 +13,10 @@ class TenantDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        /** Create Users */
         $this->call(UserSeeder::class);
+
+        /** Create Permissions */
+        $this->call(PermissionSeeder::class);
     }
 }
