@@ -1,18 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies\Authorization;
 
-use App\Models\Authorization\Role;
-use App\Models\User\User;
+use App\Enums\Authorization\Permissions\RolePermissions;
+use App\Models\Authentication\User;
+use App\Policies\Concerns\EvaluatesPermissions;
+use Spatie\Permission\Models\Role;
 
 class RolePolicy
 {
+    use EvaluatesPermissions;
+
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $this->canPerform(
+            $user,
+            RolePermissions::VIEW,
+            RolePermissions::RESTRICT_VIEW,
+        );
     }
 
     /**
@@ -20,7 +30,11 @@ class RolePolicy
      */
     public function view(User $user, Role $role): bool
     {
-        return false;
+        return $this->canPerform(
+            $user,
+            RolePermissions::VIEW,
+            RolePermissions::RESTRICT_VIEW,
+        );
     }
 
     /**
@@ -28,7 +42,11 @@ class RolePolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $this->canPerform(
+            $user,
+            RolePermissions::UPDATE,
+            RolePermissions::RESTRICT_UPDATE,
+        );
     }
 
     /**
@@ -36,7 +54,11 @@ class RolePolicy
      */
     public function update(User $user, Role $role): bool
     {
-        return false;
+        return $this->canPerform(
+            $user,
+            RolePermissions::UPDATE,
+            RolePermissions::RESTRICT_UPDATE,
+        );
     }
 
     /**
@@ -44,7 +66,11 @@ class RolePolicy
      */
     public function delete(User $user, Role $role): bool
     {
-        return false;
+        return $this->canPerform(
+            $user,
+            RolePermissions::DELETE,
+            RolePermissions::RESTRICT_DELETE,
+        );
     }
 
     /**
@@ -52,7 +78,11 @@ class RolePolicy
      */
     public function restore(User $user, Role $role): bool
     {
-        return false;
+        return $this->canPerform(
+            $user,
+            RolePermissions::UPDATE,
+            RolePermissions::RESTRICT_UPDATE,
+        );
     }
 
     /**
@@ -60,6 +90,10 @@ class RolePolicy
      */
     public function forceDelete(User $user, Role $role): bool
     {
-        return false;
+        return $this->canPerform(
+            $user,
+            RolePermissions::DELETE,
+            RolePermissions::RESTRICT_DELETE,
+        );
     }
 }

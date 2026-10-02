@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Tenant\Domain;
-use App\Models\User\User;
+use App\Models\Authentication\User;
 
 class DomainPolicy
 {

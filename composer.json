@@ -53,6 +53,12 @@
             "bun install",
             "bun run build"
         ],
+        "cache:clear": [
+            "@php artisan optimize:clear",
+            "phpstan clear-result-cache",
+            "rm -rf .phpunit.cache .pest",
+            "rm -rf storage/framework/cache/data/*"
+        ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
             "@php artisan dev"

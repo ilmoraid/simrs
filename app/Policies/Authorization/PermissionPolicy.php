@@ -3,7 +3,7 @@
 namespace App\Policies\Authorization;
 
 use App\Models\Authorization\Permission;
-use App\Models\User\User;
+use App\Models\Authentication\User;
 
 class PermissionPolicy
 {

@@ -14,13 +14,13 @@ class TenantDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        /** Create Users */
-        $this->call(UserSeeder::class);
-
         /** Create Permissions */
         $this->call(PermissionSeeder::class);
 
         /** Create Roles */
         $this->call(RoleSeeder::class);
+
+        /** Create Users */
+        $this->call(UserSeeder::class);
     }
 }
