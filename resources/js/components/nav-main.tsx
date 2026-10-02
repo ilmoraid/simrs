@@ -18,144 +18,184 @@ import {
 } from '@/components/ui/sidebar';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { usePermissions } from '@/hooks/use-permissions';
-import { type NavItem } from '@/types/layouts/nav-item';
+import type { NavItem } from '@/types/layouts/nav-item';
+import type { NavGroup } from '@/types';
 
 /**
- * Filter navigation items recursively based on user permissions.
- * Prunes parent groups/dropdowns if all child items are unauthorized.
+ * Filter navigation items recursively based on permissions.
  */
-function useAuthorizedTree(items: NavItem[]): NavItem[] {
-    const { can, canAny } = usePermissions();
+function filterNavItems(
+    nodes: NavItem[],
+    can: (p: string) => boolean,
+    canAny: (p: string[]) => boolean,
+): NavItem[] {
+    return nodes
+        .map((node) => {
+            let hasAccess = true;
+            if (typeof node.permission === 'string') {
+                hasAccess = can(node.permission);
+            } else if (Array.isArray(node.permission)) {
+                hasAccess = canAny(node.permission);
+            }
 
-    const filterNodes = (nodes: NavItem[]): NavItem[] => {
-        return nodes
-            .map((node) => {
-                // Check if user has permission for the current node
-                let hasAccess = true;
-                if (typeof node.permission === 'string') {
-                    hasAccess = can(node.permission);
-                } else if (Array.isArray(node.permission)) {
-                    hasAccess = canAny(node.permission);
+            if (Array.isArray(node.items) && node.items.length > 0) {
+                const authorizedChildren = filterNavItems(
+                    node.items,
+                    can,
+                    canAny,
+                );
+                if (authorizedChildren.length > 0 && hasAccess) {
+                    return { ...node, items: authorizedChildren };
                 }
+                return null;
+            }
 
-                // If node has children, process child items first
-                if (Array.isArray(node.items) && node.items.length > 0) {
-                    const authorizedChildren = filterNodes(node.items);
-
-                    // Keep parent group ONLY if it has accessible children and passes its own permission check
-                    if (authorizedChildren.length > 0 && hasAccess) {
-                        return { ...node, items: authorizedChildren };
-                    }
-                    return null;
-                }
-
-                // Leaf node check
-                return hasAccess ? node : null;
-            })
-            .filter((node): node is NavItem => node !== null);
-    };
-
-    return filterNodes(items);
+            return hasAccess ? node : null;
+        })
+        .filter((node): node is NavItem => node !== null);
 }
 
-export function NavMain({ items }: { items: NavItem[] }) {
-    const { isCurrentUrl } = useCurrentUrl();
-    const authorizedItems = useAuthorizedTree(items);
+/**
+ * Filter groups (modules). Hides whole group if all items are unauthorized.
+ */
+function useAuthorizedGroups(groups: NavGroup[]): NavGroup[] {
+    const { can, canAny } = usePermissions();
 
-    // Render nothing if no items pass permission checks
-    if (authorizedItems.length === 0) {
+    return groups
+        .map((group) => {
+            let hasAccess = true;
+            if (typeof group.permission === 'string') {
+                hasAccess = can(group.permission);
+            } else if (Array.isArray(group.permission)) {
+                hasAccess = canAny(group.permission);
+            }
+
+            if (!hasAccess) return null;
+
+            const authorizedItems = filterNavItems(group.items, can, canAny);
+            if (authorizedItems.length === 0) return null;
+
+            return {
+                ...group,
+                items: authorizedItems,
+            };
+        })
+        .filter((group): group is NavGroup => group !== null);
+}
+
+export function NavMain({ groups }: { groups: NavGroup[] }) {
+    const { isCurrentUrl } = useCurrentUrl();
+    const authorizedGroups = useAuthorizedGroups(groups);
+
+    if (authorizedGroups.length === 0) {
         return null;
     }
 
     return (
-        <SidebarGroup className="px-2 py-0">
-            <SidebarGroupLabel>Platform</SidebarGroupLabel>
-            <SidebarMenu>
-                {authorizedItems.map((item) => {
-                    const hasChildren =
-                        Array.isArray(item.items) && item.items.length > 0;
-                    const itemHref = item.href ?? item.href ?? '#';
+        <div className="space-y-2">
+            {authorizedGroups.map((group, groupIdx) => (
+                <SidebarGroup
+                    key={group.title ?? `group-${groupIdx}`}
+                    className="px-2 py-0"
+                >
+                    {group.title && (
+                        <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
+                    )}
+                    <SidebarMenu>
+                        {group.items.map((item) => {
+                            const hasChildren =
+                                Array.isArray(item.items) &&
+                                item.items.length > 0;
+                            const itemHref = item.href ?? item.url ?? '#';
 
-                    // 1. Single leaf navigation item
-                    if (!hasChildren) {
-                        return (
-                            <SidebarMenuItem key={item.title}>
-                                <SidebarMenuButton
+                            // 1. Leaf link item
+                            if (!hasChildren) {
+                                return (
+                                    <SidebarMenuItem key={item.title}>
+                                        <SidebarMenuButton
+                                            asChild
+                                            isActive={isCurrentUrl(itemHref)}
+                                            tooltip={item.title}
+                                        >
+                                            <Link href={itemHref} prefetch>
+                                                {item.icon && <item.icon />}
+                                                <span>{item.title}</span>
+                                            </Link>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                );
+                            }
+
+                            // 2. Collapsible parent dropdown item
+                            const isChildActive = item.items?.some((sub) => {
+                                const subHref = sub.href ?? sub.url ?? '';
+                                return subHref ? isCurrentUrl(subHref) : false;
+                            });
+
+                            return (
+                                <Collapsible
+                                    key={item.title}
                                     asChild
-                                    isActive={isCurrentUrl(itemHref)}
-                                    tooltip={item.title}
+                                    defaultOpen={isChildActive}
+                                    className="group/collapsible"
                                 >
-                                    <Link href={itemHref} prefetch>
-                                        {item.icon && <item.icon />}
-                                        <span>{item.title}</span>
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                        );
-                    }
+                                    <SidebarMenuItem>
+                                        <CollapsibleTrigger asChild>
+                                            <SidebarMenuButton
+                                                tooltip={item.title}
+                                            >
+                                                {item.icon && <item.icon />}
+                                                <span>{item.title}</span>
+                                                <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                                            </SidebarMenuButton>
+                                        </CollapsibleTrigger>
 
-                    // 2. Collapsible parent dropdown item
-                    const isChildActive = item.items?.some((sub) => {
-                        const subHref = sub.href ?? sub.href ?? '';
-                        return subHref ? isCurrentUrl(subHref) : false;
-                    });
+                                        <CollapsibleContent>
+                                            <SidebarMenuSub>
+                                                {item.items?.map((subItem) => {
+                                                    const subHref =
+                                                        subItem.href ??
+                                                        subItem.url ??
+                                                        '#';
 
-                    return (
-                        <Collapsible
-                            key={item.title}
-                            asChild
-                            defaultOpen={isChildActive}
-                            className="group/collapsible"
-                        >
-                            <SidebarMenuItem>
-                                <CollapsibleTrigger asChild>
-                                    <SidebarMenuButton tooltip={item.title}>
-                                        {item.icon && <item.icon />}
-                                        <span>{item.title}</span>
-                                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                                    </SidebarMenuButton>
-                                </CollapsibleTrigger>
-
-                                <CollapsibleContent>
-                                    <SidebarMenuSub>
-                                        {item.items?.map((subItem) => {
-                                            const subHref =
-                                                subItem.href ??
-                                                subItem.href ??
-                                                '#';
-
-                                            return (
-                                                <SidebarMenuSubItem
-                                                    key={subItem.title}
-                                                >
-                                                    <SidebarMenuSubButton
-                                                        asChild
-                                                        isActive={isCurrentUrl(
-                                                            subHref,
-                                                        )}
-                                                    >
-                                                        <Link
-                                                            href={subHref}
-                                                            prefetch
+                                                    return (
+                                                        <SidebarMenuSubItem
+                                                            key={subItem.title}
                                                         >
-                                                            {subItem.icon && (
-                                                                <subItem.icon />
-                                                            )}
-                                                            <span>
-                                                                {subItem.title}
-                                                            </span>
-                                                        </Link>
-                                                    </SidebarMenuSubButton>
-                                                </SidebarMenuSubItem>
-                                            );
-                                        })}
-                                    </SidebarMenuSub>
-                                </CollapsibleContent>
-                            </SidebarMenuItem>
-                        </Collapsible>
-                    );
-                })}
-            </SidebarMenu>
-        </SidebarGroup>
+                                                            <SidebarMenuSubButton
+                                                                asChild
+                                                                isActive={isCurrentUrl(
+                                                                    subHref,
+                                                                )}
+                                                            >
+                                                                <Link
+                                                                    href={
+                                                                        subHref
+                                                                    }
+                                                                    prefetch
+                                                                >
+                                                                    {subItem.icon && (
+                                                                        <subItem.icon />
+                                                                    )}
+                                                                    <span>
+                                                                        {
+                                                                            subItem.title
+                                                                        }
+                                                                    </span>
+                                                                </Link>
+                                                            </SidebarMenuSubButton>
+                                                        </SidebarMenuSubItem>
+                                                    );
+                                                })}
+                                            </SidebarMenuSub>
+                                        </CollapsibleContent>
+                                    </SidebarMenuItem>
+                                </Collapsible>
+                            );
+                        })}
+                    </SidebarMenu>
+                </SidebarGroup>
+            ))}
+        </div>
     );
 }
