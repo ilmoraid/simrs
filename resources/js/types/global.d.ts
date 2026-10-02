@@ -1,4 +1,5 @@
-import type { Auth } from '@/types/auth';
+import { Auth } from './authentication/auth';
+import { FlashMessages } from './common/flash-messages';
 
 declare module 'react' {
     interface InputHTMLAttributes<T> {
@@ -12,6 +13,7 @@ declare module '@inertiajs/core' {
             name: string;
             auth: Auth;
             sidebarOpen: boolean;
+            flash?: FlashMessages;
             [key: string]: unknown;
         };
     }

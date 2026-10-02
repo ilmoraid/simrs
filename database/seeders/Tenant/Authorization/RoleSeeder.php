@@ -15,16 +15,16 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         $allPermissions = array_column(
-            PermissionRegistry::forUpsert("web"),
-            "name",
+            PermissionRegistry::forUpsert('web'),
+            'name',
         );
 
         foreach (UserRoles::cases() as $roleEnum) {
             $role = Role::firstOrCreate(
-                ["name" => $roleEnum->value, "guard_name" => "web"],
+                ['name' => $roleEnum->value, 'guard_name' => 'web'],
                 [
-                    "description" => $roleEnum->description(),
-                    "is_system" => $roleEnum->isSystem(),
+                    'description' => $roleEnum->description(),
+                    'is_system' => $roleEnum->isSystem(),
                 ],
             );
 

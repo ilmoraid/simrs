@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Tenant\Domain;
 use App\Models\Authentication\User;
+use App\Models\Tenant\Domain;
 
 class DomainPolicy
 {

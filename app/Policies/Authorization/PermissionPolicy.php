@@ -2,8 +2,8 @@
 
 namespace App\Policies\Authorization;
 
-use App\Models\Authorization\Permission;
 use App\Models\Authentication\User;
+use App\Models\Authorization\Permission;
 
 class PermissionPolicy
 {

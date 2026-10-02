@@ -6,13 +6,13 @@ namespace App\Enums\Authorization\Roles;
 
 enum UserRoles: string
 {
-    case SUPER_ADMIN = "Super Admin";
-    case ADMIN = "Admin";
-    case DOCTOR = "Doctor";
-    case PHARMACIST = "Pharmacist";
-    case REGISTRATION_STAFF = "Registration Staff";
-    case BILLING_STAFF = "Billing Staff";
-    case AUDITOR = "Auditor";
+    case SUPER_ADMIN = 'Super Admin';
+    case ADMIN = 'Admin';
+    case DOCTOR = 'Doctor';
+    case PHARMACIST = 'Pharmacist';
+    case REGISTRATION_STAFF = 'Registration Staff';
+    case BILLING_STAFF = 'Billing Staff';
+    case AUDITOR = 'Auditor';
 
     /**
      * Get the display description for the role.
@@ -20,20 +20,13 @@ enum UserRoles: string
     public function description(): string
     {
         return match ($this) {
-            self::SUPER_ADMIN
-                => "Highest level access. Complete control over all system features, user management, and platform configuration.",
-            self::ADMIN
-                => "Full access to all features and settings. Manage users, permissions, and system configuration.",
-            self::DOCTOR
-                => "Manages patient diagnoses, treatments, prescriptions, and medical records.",
-            self::PHARMACIST
-                => "Handles medication dispensing, prescription fulfillment, and drug inventory management.",
-            self::REGISTRATION_STAFF
-                => "Manages patient registration, demographic data, and appointment scheduling.",
-            self::BILLING_STAFF
-                => "Processes billing, invoices, insurance claims, and payment records.",
-            self::AUDITOR
-                => "Read-only access for audits, compliance reviews, and report verification.",
+            self::SUPER_ADMIN => 'Highest level access. Complete control over all system features, user management, and platform configuration.',
+            self::ADMIN => 'Full access to all features and settings. Manage users, permissions, and system configuration.',
+            self::DOCTOR => 'Manages patient diagnoses, treatments, prescriptions, and medical records.',
+            self::PHARMACIST => 'Handles medication dispensing, prescription fulfillment, and drug inventory management.',
+            self::REGISTRATION_STAFF => 'Manages patient registration, demographic data, and appointment scheduling.',
+            self::BILLING_STAFF => 'Processes billing, invoices, insurance claims, and payment records.',
+            self::AUDITOR => 'Read-only access for audits, compliance reviews, and report verification.',
         };
     }
 

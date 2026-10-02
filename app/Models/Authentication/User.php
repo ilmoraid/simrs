@@ -30,13 +30,13 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(["name", "email", "password"])]
+#[Fillable(['name', 'email', 'password'])]
 #[
     Hidden([
-        "password",
-        "two_factor_secret",
-        "two_factor_recovery_codes",
-        "remember_token",
+        'password',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
+        'remember_token',
     ]),
 ]
 class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
@@ -55,7 +55,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
      * Force Eloquent to use the tenant connection.
      * Required if tenancy hasn't automatically overridden the default DB connection.
      */
-    protected $connection = "tenant";
+    protected $connection = 'tenant';
 
     /**
      * Get the attributes that should be cast.
@@ -65,9 +65,9 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     protected function casts(): array
     {
         return [
-            "email_verified_at" => "datetime",
-            "password" => "hashed",
-            "two_factor_confirmed_at" => "datetime",
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'two_factor_confirmed_at' => 'datetime',
         ];
     }
 }

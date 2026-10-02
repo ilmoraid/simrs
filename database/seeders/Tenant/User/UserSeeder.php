@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $admin = User::factory([
-            "email" => "admin@ilmora.id",
+            'email' => 'admin@ilmora.id',
         ])->create();
 
         User::factory()->unverified()->count(5)->create();
