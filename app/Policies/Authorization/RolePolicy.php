@@ -44,8 +44,8 @@ class RolePolicy
     {
         return $this->canPerform(
             $user,
-            RolePermissions::UPDATE,
-            RolePermissions::RESTRICT_UPDATE,
+            RolePermissions::CREATE,
+            RolePermissions::RESTRICT_CREATE,
         );
     }
 
