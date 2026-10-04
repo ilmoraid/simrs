@@ -7,6 +7,7 @@ namespace App\Registries;
 use App\Contracts\PermissionContract;
 use App\Enums\Authorization\Permissions\DashboardPermissions;
 use App\Enums\Authorization\Permissions\GeneralPermissions;
+use App\Enums\Authorization\Permissions\ModulePermissions;
 use App\Enums\Authorization\Permissions\RolePermissions;
 use App\Enums\Authorization\Permissions\UserPermissions;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +25,7 @@ final class PermissionRegistry
     public static function modules(): array
     {
         return [
+            ModulePermissions::class,
             DashboardPermissions::class,
             GeneralPermissions::class,
             UserPermissions::class,
@@ -103,9 +105,7 @@ final class PermissionRegistry
         );
 
         try {
-            app(
-                PermissionRegistrar::class,
-            )->forgetCachedPermissions();
+            app(PermissionRegistrar::class)->forgetCachedPermissions();
         } catch (\Throwable $e) {
             // Ignore during initial database migration setups
         }
