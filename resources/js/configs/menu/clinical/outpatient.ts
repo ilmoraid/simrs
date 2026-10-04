@@ -6,6 +6,5 @@ export const OutpatientMenu: NavItem[] = [
         title: 'Outpatient (RJ)',
         href: '/rawat-jalan',
         icon: Stethoscope,
-        permission: 'outpatient:view',
     },
 ];

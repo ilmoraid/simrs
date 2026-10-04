@@ -1,3 +1,4 @@
+import profile from '@/routes/profile';
 import { NavItem } from '@/types';
 import { Settings, ShieldCheck, Users } from 'lucide-react';
 
@@ -9,7 +10,7 @@ export const UserMenu: NavItem[] = [
         items: [
             {
                 title: 'Users',
-                href: '/users',
+                href: profile.edit(),
                 icon: Users,
                 permission: 'user:view',
             },

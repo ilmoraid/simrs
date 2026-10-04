@@ -1,12 +1,13 @@
+import { LucideIcon } from 'lucide-react';
+import { AppPermission } from '../generated/authorization';
 import { InertiaLinkProps } from '@inertiajs/react';
-import type { LucideIcon } from 'lucide-react';
 
 export type NavItem = {
     title: string;
     href: NonNullable<InertiaLinkProps['href']>;
     url?: string;
     icon?: LucideIcon | null;
-    permission?: string;
+    permission?: AppPermission | AppPermission[] | null;
     isActive?: boolean;
     items?: NavItem[];
 };
