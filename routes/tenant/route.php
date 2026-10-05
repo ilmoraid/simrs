@@ -31,5 +31,8 @@ Route::middleware([
         Route::inertia('dashboard', 'dashboard')->name('dashboard');
     });
 
-    require __DIR__.'/settings/route.php';
+    /** management */
+    require_once __DIR__.'/management/route.php';
+
+    require_once __DIR__.'/settings/route.php';
 });
