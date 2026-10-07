@@ -6,7 +6,7 @@ namespace App\Enums\Authorization\Roles;
 
 enum UserRoles: string
 {
-    case SUPER_ADMIN = 'Super Admin';
+    case ADMINISTRATOR = 'Administrator';
     case ADMIN = 'Admin';
     case DOCTOR = 'Doctor';
     case PHARMACIST = 'Pharmacist';
@@ -20,7 +20,7 @@ enum UserRoles: string
     public function description(): string
     {
         return match ($this) {
-            self::SUPER_ADMIN => 'Highest level access. Complete control over all system features, user management, and platform configuration.',
+            self::ADMINISTRATOR => 'Highest level access. Complete control over all system features, user management, and platform configuration.',
             self::ADMIN => 'Full access to all features and settings. Manage users, permissions, and system configuration.',
             self::DOCTOR => 'Manages patient diagnoses, treatments, prescriptions, and medical records.',
             self::PHARMACIST => 'Handles medication dispensing, prescription fulfillment, and drug inventory management.',
@@ -36,7 +36,7 @@ enum UserRoles: string
     public function isSystem(): bool
     {
         return match ($this) {
-            self::SUPER_ADMIN, self::ADMIN => true,
+            self::ADMINISTRATOR, self::ADMIN => true,
             default => false,
         };
     }

@@ -30,7 +30,7 @@ class RoleSeeder extends Seeder
 
             // Assign full permissions to administrative roles
             if (
-                $roleEnum === UserRoles::SUPER_ADMIN ||
+                $roleEnum === UserRoles::ADMINISTRATOR ||
                 $roleEnum === UserRoles::ADMIN
             ) {
                 $role->syncPermissions($allPermissions);
