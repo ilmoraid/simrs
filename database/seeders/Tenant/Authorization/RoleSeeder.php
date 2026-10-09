@@ -15,16 +15,16 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         $allPermissions = array_column(
-            PermissionRegistry::forUpsert('web'),
-            'name',
+            PermissionRegistry::forUpsert("web"),
+            "name",
         );
 
         foreach (UserRoles::cases() as $roleEnum) {
             $role = Role::firstOrCreate(
-                ['name' => $roleEnum->value, 'guard_name' => 'web'],
+                ["name" => $roleEnum->value, "guard_name" => "web"],
                 [
-                    'description' => $roleEnum->description(),
-                    'is_system' => $roleEnum->isSystem(),
+                    "description" => $roleEnum->description(),
+                    "is_system" => $roleEnum->isSystem(),
                 ],
             );
 
@@ -34,6 +34,18 @@ class RoleSeeder extends Seeder
                 $roleEnum === UserRoles::ADMIN
             ) {
                 $role->syncPermissions($allPermissions);
+            } else {
+                // Pick a random count between 5 and 25 (capped by total available permissions)
+                $count = min(rand(5, 25), count($allPermissions));
+
+                // Grab random unique permission names from the $allPermissions array
+                $randomPermissions = \Illuminate\Support\Arr::random(
+                    $allPermissions,
+                    $count,
+                );
+
+                // Sync the permissions to the non-admin role
+                $role->syncPermissions($randomPermissions);
             }
         }
     }

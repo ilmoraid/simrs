@@ -1,3 +1,4 @@
+import { User } from '../authentication';
 import { DateResource } from '../common/date-resource';
 import { GroupedPermissions, Permission } from './permission';
 
@@ -12,6 +13,7 @@ export type Role = {
     /** * Relations
      * We use Permission[] for the raw flat list
      */
+    users?: User[] | [];
     permissions?: Permission[] | [];
     created_by_name?: string | null;
     updated_by_name?: string | null;
@@ -19,6 +21,7 @@ export type Role = {
     /** Counted
      * total_permissions for total count of permission that role have
      */
+    total_users?: number | null;
     total_permissions?: number | null;
 
     /** Grouped

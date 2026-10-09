@@ -9,7 +9,7 @@ export const UserMenu: NavItem[] = [
         icon: Shield,
         items: [
             {
-                title: 'Users',
+                title: 'Users & Accounts',
                 href: '/user',
                 icon: Users,
                 permission: 'user:view',

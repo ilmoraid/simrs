@@ -52,7 +52,7 @@ declare namespace App {
             }
             namespace Roles {
                 export type UserRoles =
-                    | 'Super Admin'
+                    | 'Administrator'
                     | 'Admin'
                     | 'Doctor'
                     | 'Pharmacist'

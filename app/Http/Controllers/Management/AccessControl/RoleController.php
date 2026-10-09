@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Management\AccessControl;
 
 use App\Http\Controllers\Controller;
-use App\Models\Authorization\Permission;
-use App\Models\Authorization\Role;
+use App\Queries\Management\AccessControl\PermissionIndexQuery;
+use App\Queries\Management\AccessControl\RoleIndexQuery;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -14,19 +14,17 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
-    {
-        $roles = Inertia::defer(
-            fn () => Role::query()
-                ->with(['permissions:uuid,label'])
-                ->get(),
-        );
-        $permissions = Inertia::defer(fn () => Permission::query()->get());
+    public function index(
+        RoleIndexQuery $role,
+        PermissionIndexQuery $permission,
+    ): Response {
+        $roles = Inertia::defer(fn() => $role->execute());
+        $totalPermission = Inertia::defer(fn() => $permission->execute());
 
-        return Inertia::render('management/access-control/roles/page', [
-            'roles' => $roles,
-            'availablePermissions' => $permissions,
-        ]);
+        return Inertia::render(
+            "management/access-control/roles/page",
+            compact("roles", "totalPermission"),
+        );
     }
 
     /**

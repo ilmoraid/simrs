@@ -1,75 +1,77 @@
 import { Deferred, Head } from '@inertiajs/react';
-import { Skeleton } from '@/components/ui/skeleton';
 import roles from '@/routes/management/access-control/roles';
-import type { Permission, Role } from '@/types';
+import type { Role } from '@/types';
+import { CreateRoleDialog } from './components/create-role/dialog';
+import { useRoleFilters } from './hooks/use-role-filters';
+import { RoleFilters } from './components/filter/role-filters';
+import { RoleCardSkeleton } from './components/card/role-skeleton';
+import { RoleCard } from './components/card/role-card';
+import RoleHeader from './components/card/role-header';
 
 type PageProps = {
     roles?: Role[];
-    availablePermissions?: Record<string, Permission[]>;
+    totalPermission?: number;
 };
 
 const pageTitle = 'Roles & Permissions';
 
-export default function RolesPage({ roles, availablePermissions }: PageProps) {
+export default function RolesPage({ roles, totalPermission }: PageProps) {
+    const { query, setQuery, filter, setFilter, filteredRoles } =
+        useRoleFilters(roles);
+
     return (
         <div className="space-y-6 p-6">
             <Head title={pageTitle} />
 
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold tracking-tight">
-                        {pageTitle}
-                    </h1>
-                    <p className="text-sm text-muted-foreground">
-                        Manage system roles and assign domain permissions.
-                    </p>
-                </div>
+            <div className="mb-8 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+                <RoleHeader />
+
+                {/* create role dialog */}
+                <CreateRoleDialog />
             </div>
+
+            {/* filter */}
+            <RoleFilters
+                query={query}
+                onQueryChange={setQuery}
+                filter={filter}
+                onFilterChange={setFilter}
+            />
 
             {/* Defer load roles & permissions */}
             <Deferred
-                data={['roles', 'availablePermissions']}
-                fallback={<RolesSkeleton />}
+                data={['roles', 'totalPermission']}
+                fallback={<RoleCardSkeleton />}
             >
-                <RolesTable
-                    roles={roles}
-                    availablePermissions={availablePermissions}
+                <RoleGrid
+                    roles={filteredRoles}
+                    totalPermission={totalPermission}
                 />
             </Deferred>
         </div>
     );
 }
 
-function RolesTable({ roles }: PageProps) {
-    return (
-        <div className="rounded-md border p-4">
-            <div className="grid gap-4">
-                {roles?.map((role) => (
-                    <div
-                        key={role.uuid}
-                        className="flex items-center justify-between border-b pb-2"
-                    >
-                        <div>
-                            <p className="font-semibold">{role.name}</p>
-                            <p className="text-xs text-muted-foreground">
-                                {role.permissions?.length ?? 0} permissions
-                                assigned
-                            </p>
-                        </div>
-                    </div>
-                ))}
+function RoleGrid({ roles = [], totalPermission }: PageProps) {
+    if (roles.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground">
+                <p className="text-sm font-medium">
+                    No roles found matching your filter.
+                </p>
             </div>
-        </div>
-    );
-}
+        );
+    }
 
-function RolesSkeleton() {
     return (
-        <div className="space-y-3 rounded-md border p-4">
-            <Skeleton className="h-6 w-1/4" />
-            <Skeleton className="h-12 w-full" />
-            <Skeleton className="h-12 w-full" />
-            <Skeleton className="h-12 w-full" />
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {roles.map((role) => (
+                <RoleCard
+                    key={role.uuid}
+                    role={role}
+                    totalPermission={totalPermission}
+                />
+            ))}
         </div>
     );
 }
