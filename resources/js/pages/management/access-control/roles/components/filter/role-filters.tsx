@@ -7,12 +7,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import type { RoleFilter } from '../../types';
 
 interface RoleFiltersProps {
     query: string;
     onQueryChange: (value: string) => void;
-    filter: string;
-    onFilterChange: (value: string) => void;
+    filter: RoleFilter;
+    onFilterChange: (value: RoleFilter) => void;
 }
 
 export function RoleFilters({

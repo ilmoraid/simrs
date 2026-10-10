@@ -41,7 +41,7 @@ export default function RolesPage({ roles, totalPermission }: PageProps) {
             {/* Defer load roles & permissions */}
             <Deferred
                 data={['roles', 'totalPermission']}
-                fallback={<RoleCardSkeleton />}
+                fallback={<RoleCardSkeleton count={8} />}
             >
                 <RoleGrid
                     roles={filteredRoles}

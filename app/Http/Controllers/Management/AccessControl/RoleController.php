@@ -18,12 +18,12 @@ class RoleController extends Controller
         RoleIndexQuery $role,
         PermissionIndexQuery $permission,
     ): Response {
-        $roles = Inertia::defer(fn() => $role->execute());
-        $totalPermission = Inertia::defer(fn() => $permission->execute());
+        $roles = Inertia::defer(fn () => $role->execute());
+        $totalPermission = Inertia::defer(fn () => $permission->execute());
 
         return Inertia::render(
-            "management/access-control/roles/page",
-            compact("roles", "totalPermission"),
+            'management/access-control/roles/page',
+            compact('roles', 'totalPermission'),
         );
     }
 

@@ -6,6 +6,7 @@ use App\Enums\Authorization\Roles\UserRoles;
 use App\Models\Authorization\Role;
 use App\Registries\PermissionRegistry;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 
 class RoleSeeder extends Seeder
 {
@@ -15,16 +16,16 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         $allPermissions = array_column(
-            PermissionRegistry::forUpsert("web"),
-            "name",
+            PermissionRegistry::forUpsert('web'),
+            'name',
         );
 
         foreach (UserRoles::cases() as $roleEnum) {
             $role = Role::firstOrCreate(
-                ["name" => $roleEnum->value, "guard_name" => "web"],
+                ['name' => $roleEnum->value, 'guard_name' => 'web'],
                 [
-                    "description" => $roleEnum->description(),
-                    "is_system" => $roleEnum->isSystem(),
+                    'description' => $roleEnum->description(),
+                    'is_system' => $roleEnum->isSystem(),
                 ],
             );
 
@@ -39,7 +40,7 @@ class RoleSeeder extends Seeder
                 $count = min(rand(5, 25), count($allPermissions));
 
                 // Grab random unique permission names from the $allPermissions array
-                $randomPermissions = \Illuminate\Support\Arr::random(
+                $randomPermissions = Arr::random(
                     $allPermissions,
                     $count,
                 );

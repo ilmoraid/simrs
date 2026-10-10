@@ -15,7 +15,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Role } from '@/types';
+import type { Role } from '@/types';
 import { ChevronDown, MoreHorizontal, ShieldCheck, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { UserAvatars } from './user-avatar';

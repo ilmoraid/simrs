@@ -15,16 +15,16 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $admin = User::factory([
-            "email" => "admin@ilmora.id",
+            'email' => 'admin@ilmora.id',
         ])->create();
         $administrator = User::factory([
-            "email" => "administrator@ilmora.id",
+            'email' => 'administrator@ilmora.id',
         ])->create();
 
         $admin->assignRole(UserRoles::ADMIN);
         $administrator->assignRole(UserRoles::ADMINISTRATOR);
 
-        $roles = Role::query()->get()->pluck("name");
+        $roles = Role::query()->get()->pluck('name');
 
         User::factory()
             ->unverified()

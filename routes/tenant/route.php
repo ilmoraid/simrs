@@ -19,20 +19,20 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 */
 
 Route::middleware([
-    "web",
+    'web',
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
     Route::fortifyTenant();
 
-    Route::redirect("/", "/dashboard");
+    Route::redirect('/', '/dashboard');
 
-    Route::middleware(["auth", "verified"])->group(function () {
-        Route::inertia("dashboard", "dashboard")->name("dashboard");
+    Route::middleware(['auth', 'verified'])->group(function () {
+        Route::inertia('dashboard', 'dashboard')->name('dashboard');
 
         /** management */
-        require_once __DIR__ . "/management/route.php";
+        require_once __DIR__.'/management/route.php';
 
-        require_once __DIR__ . "/settings/route.php";
+        require_once __DIR__.'/settings/route.php';
     });
 });

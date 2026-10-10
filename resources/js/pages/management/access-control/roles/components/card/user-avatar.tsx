@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useInitials } from '@/hooks/use-initials';
-import { User } from '@/types';
+import type { User } from '@/types';
 
 type UserAvatarsProps = {
     users?: User[];

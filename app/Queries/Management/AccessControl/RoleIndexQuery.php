@@ -17,9 +17,9 @@ final class RoleIndexQuery
     {
         $roles = Role::query()
             ->with([
-                "users" => fn(Relation $query) => $query->limit(3),
+                'users' => fn (Relation $query) => $query->limit(3),
             ])
-            ->withCount(["users", "permissions"])
+            ->withCount(['users', 'permissions'])
             ->get();
 
         return RoleResource::collection($roles)->resolve();

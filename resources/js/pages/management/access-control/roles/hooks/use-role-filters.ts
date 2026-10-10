@@ -1,15 +1,23 @@
 import { useMemo, useState } from 'react';
-import type { Role } from '@/types/authorization/role';
+import { useDebounce } from '@/hooks/use-debounce';
+import type { Role } from '@/types';
+
+export type RoleFilter = 'all' | 'system' | 'custom';
 
 export function useRoleFilters(roles: Role[] = []) {
     const [query, setQuery] = useState('');
-    const [filter, setFilter] = useState<string>('all');
+    const [filter, setFilter] = useState<RoleFilter>('all');
+
+    // Debounce query with a 300ms delay
+    const debouncedQuery = useDebounce(query, 300);
 
     const filteredRoles = useMemo(() => {
-        return roles?.filter((role) => {
-            const matchesQuery = role.name
-                .toLowerCase()
-                .includes(query.toLowerCase());
+        const normalizedQuery = debouncedQuery.trim().toLowerCase();
+
+        return roles.filter((role) => {
+            const matchesQuery =
+                !normalizedQuery ||
+                (role.name?.toLowerCase().includes(normalizedQuery) ?? false);
 
             const matchesFilter =
                 filter === 'all' ||
@@ -18,7 +26,7 @@ export function useRoleFilters(roles: Role[] = []) {
 
             return matchesQuery && matchesFilter;
         });
-    }, [roles, query, filter]);
+    }, [roles, debouncedQuery, filter]);
 
     return {
         query,
