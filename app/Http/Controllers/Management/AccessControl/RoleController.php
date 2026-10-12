@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Management\AccessControl;
 
+use App\Actions\Management\AccessControl\DeleteRoleAction;
 use App\Actions\Management\AccessControl\StoreRoleAction;
 use App\Data\Authorization\RoleData;
 use App\Http\Controllers\Controller;
+use App\Models\Authorization\Role;
 use App\Queries\Management\AccessControl\PermissionIndexQuery;
 use App\Queries\Management\AccessControl\RoleIndexQuery;
 use App\Support\Toast;
@@ -82,8 +84,16 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): void
-    {
-        //
+    public function destroy(
+        Role $role,
+        DeleteRoleAction $action,
+    ): RedirectResponse {
+        $action->execute($role);
+
+        Toast::success(
+            __('crud.deleted', ['resource' => __('resources.role')]),
+        );
+
+        return to_route('management.access-control.roles.index');
     }
 }

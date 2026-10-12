@@ -4,9 +4,9 @@ import type { Role } from '@/types';
 import { CreateRoleDialog } from './components/create-role/dialog';
 import { useRoleFilters } from './hooks/use-role-filters';
 import { RoleFilters } from './components/filter/role-filters';
-import { RoleCardSkeleton } from './components/card/role-skeleton';
-import { RoleCard } from './components/card/role-card';
-import RoleHeader from './components/card/role-header';
+import { RoleCardSkeleton } from './components/card/skeleton';
+import { RoleCard } from './components/card';
+import RoleHeader from './components/card/header';
 
 type PageProps = {
     roles?: Role[];
