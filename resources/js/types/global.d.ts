@@ -1,5 +1,6 @@
 import { Auth } from './authentication/auth';
 import { FlashMessages } from './common/flash-messages';
+import { FlashToast } from './layouts';
 
 declare module 'react' {
     interface InputHTMLAttributes<T> {
@@ -9,11 +10,13 @@ declare module 'react' {
 
 declare module '@inertiajs/core' {
     export interface InertiaConfig {
+        flashDataType: {
+            toast?: FlashToast;
+        };
         sharedPageProps: {
             name: string;
             auth: Auth;
             sidebarOpen: boolean;
-            flash?: FlashMessages;
             [key: string]: unknown;
         };
     }

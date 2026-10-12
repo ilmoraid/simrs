@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Authentication;
 
+use App\Http\Resources\Authorization\PermissionResource;
 use App\Http\Resources\Authorization\RoleResource;
 use App\Http\Resources\Common\DateResource;
 use Illuminate\Http\Request;
@@ -48,7 +49,7 @@ final class UserResource extends JsonResource
 
             // relations
             'roles' => RoleResource::collection($this->whenLoaded('roles')),
-            'permissions' => RoleResource::collection(
+            'permissions' => PermissionResource::collection(
                 $this->whenLoaded('permissions'),
             ),
         ];

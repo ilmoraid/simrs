@@ -30,9 +30,7 @@ final class PermissionResource extends JsonResource
             'name' => $this->name,
             'label' => $this->label,
             'module' => $this->module,
-            'description' => blank($this->description)
-                ? 'No description'
-                : $this->description,
+            'description' => $this->description,
 
             // Nested Date Resources
             'created_at' => DateResource::make($this->created_at),

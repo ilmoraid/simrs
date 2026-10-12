@@ -1,4 +1,4 @@
-import { NavItem } from '@/types';
+import type { NavItem } from '@/types';
 import { BookOpen, FolderGit2 } from 'lucide-react';
 
 export const footerNavItems: NavItem[] = [

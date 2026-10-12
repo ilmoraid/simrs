@@ -13,4 +13,11 @@ class Role extends SpatieRole
     use HasFactory;
 
     use HasUuids;
+
+    protected function casts(): array
+    {
+        return [
+            'is_system' => 'boolean',
+        ];
+    }
 }

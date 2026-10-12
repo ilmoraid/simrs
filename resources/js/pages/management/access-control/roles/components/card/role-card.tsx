@@ -16,7 +16,14 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import type { Role } from '@/types';
-import { ChevronDown, MoreHorizontal, ShieldCheck, Trash2 } from 'lucide-react';
+import {
+    ChevronDown,
+    Copy,
+    MoreHorizontal,
+    Pen,
+    ShieldCheck,
+    Trash2,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { UserAvatars } from './user-avatar';
 
@@ -46,13 +53,19 @@ export function RoleCard({ role, totalPermission }: RoleCardProps) {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem>Edit role</DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <Pen data-icon="inline-start" />
+                                Edit role
+                            </DropdownMenuItem>
                             <DropdownMenuItem
                                 onClick={() => toast.success('Role duplicated')}
                             >
+                                <Copy data-icon="inline-start" />
                                 Duplicate
                             </DropdownMenuItem>
-                            {role.is_system === false && (
+
+                            {/* Only show delete if it's not a system role */}
+                            {!role.is_system && (
                                 <>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem

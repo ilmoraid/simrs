@@ -1,6 +1,6 @@
 import { portalMenu } from './portal-menu';
 import { footerNavItems } from './footer-menu';
-import { NavGroup, NavItem } from '@/types';
+import type { NavGroup, NavItem } from '@/types';
 
 export interface MenuRegistry {
     navMain: NavGroup[];

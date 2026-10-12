@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Management\AccessControl;
 
+use App\Actions\Management\AccessControl\StoreRoleAction;
+use App\Data\Authorization\RoleData;
 use App\Http\Controllers\Controller;
 use App\Queries\Management\AccessControl\PermissionIndexQuery;
 use App\Queries\Management\AccessControl\RoleIndexQuery;
+use App\Support\Toast;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -38,9 +42,17 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): void
-    {
-        //
+    public function store(
+        RoleData $data,
+        StoreRoleAction $action,
+    ): RedirectResponse {
+        $action->execute($data);
+
+        Toast::success(
+            __('crud.created', ['resource' => __('resources.role')]),
+        );
+
+        return to_route('management.access-control.roles.index');
     }
 
     /**
