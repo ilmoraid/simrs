@@ -159,9 +159,7 @@ return [
      */
     'redis' => [
         'prefix_base' => 'tenant_', // Each key in Redis will be prepended by this prefix_base, followed by the tenant id.
-        'prefixed_connections' => [
-            // 'default',
-        ], // Redis connections whose keys are prefixed, to separate one tenant's keys from another.
+        'prefixed_connections' => ['default'], // Redis connections whose keys are prefixed, to separate one tenant's keys from another.
     ],
 
     /**
