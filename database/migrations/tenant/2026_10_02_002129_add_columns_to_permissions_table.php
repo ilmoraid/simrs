@@ -17,15 +17,15 @@ return new class extends Migration
         Schema::table($tableNames['permissions'], function (
             Blueprint $table,
         ): void {
-            $table->string('name', 225)->change(); // For MyISAM use string('name', 225); // (or 166 for InnoDB with Redundant/Compact row format)
-            $table->string('label', 225);
+            $table->string('name', 50)->change(); // For MyISAM use string('name', 225); // (or 166 for InnoDB with Redundant/Compact row format)
+            $table->string('label', 50);
             $table->text('description')->nullable();
             $table->string('module')->default(GeneralPermissions::GENERAL);
             $table->string('guard_name', 25)->change(); // For MyISAM use string('guard_name', 25);
         });
 
         Schema::table($tableNames['roles'], function (Blueprint $table): void {
-            $table->string('name', 255)->change(); // For MyISAM use string('name', 225); // (or 166 for InnoDB with Redundant/Compact row format)
+            $table->string('name', 50)->change(); // For MyISAM use string('name', 225); // (or 166 for InnoDB with Redundant/Compact row format)
             $table->string('guard_name', 25)->change(); // For MyISAM use string('guard_name', 25);
             $table->text('description')->nullable();
             $table->boolean('is_system')->default(false);

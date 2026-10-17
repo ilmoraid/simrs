@@ -18,6 +18,7 @@ final class RoleData extends Data
         public ?string $uuid,
         public string $name,
         public ?string $description,
+        public ?bool $is_system,
         public ?string $guard_name,
         public ?array $permissions = [],
     ) {}
