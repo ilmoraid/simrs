@@ -18,7 +18,7 @@ final class DeleteRoleAction
 
         return $this->safeExecute(
             fn () => $this->transaction(
-                fn () => $roleData->is_system === false && $role->delete(),
+                fn () => ! $roleData->is_system && $role->delete(),
             ),
             __('crud.failed_delete', ['resource' => __('resources.role')]),
         );

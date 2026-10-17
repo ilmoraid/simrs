@@ -28,6 +28,7 @@ import { toast } from 'sonner';
 import { UserAvatars } from './user-avatar';
 import { useState } from 'react';
 import { DeleteRoleAlertDialog } from '../delete-role/dialog';
+import { UpdateRoleDialog } from '../update-role/dialog';
 
 type RoleCardProps = {
     role: Role;
@@ -35,8 +36,11 @@ type RoleCardProps = {
 };
 
 export function RoleCard({ role, totalPermission }: RoleCardProps) {
-    const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
-    const handleShowDeleteDialog = () => setShowDeleteDialog((prev) => !prev);
+    // update dialog
+    const [updateDialog, setUpdateDialog] = useState<boolean>(false);
+
+    // delete dialog
+    const [deleteDialog, setDeleteDialog] = useState<boolean>(false);
 
     return (
         <>
@@ -59,7 +63,11 @@ export function RoleCard({ role, totalPermission }: RoleCardProps) {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                <DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() =>
+                                        setUpdateDialog((prev) => !prev)
+                                    }
+                                >
                                     <Pen data-icon="inline-start" />
                                     Edit role
                                 </DropdownMenuItem>
@@ -79,9 +87,7 @@ export function RoleCard({ role, totalPermission }: RoleCardProps) {
                                         <DropdownMenuItem
                                             className="text-destructive"
                                             onClick={() =>
-                                                setShowDeleteDialog(
-                                                    (prev) => !prev,
-                                                )
+                                                setDeleteDialog((prev) => !prev)
                                             }
                                         >
                                             <Trash2 data-icon="inline-start" />
@@ -159,11 +165,19 @@ export function RoleCard({ role, totalPermission }: RoleCardProps) {
                 </CardFooter>
             </Card>
 
-            {showDeleteDialog && (
+            {updateDialog && (
+                <UpdateRoleDialog
+                    role={role}
+                    open={updateDialog}
+                    onOpenChange={setUpdateDialog}
+                />
+            )}
+
+            {deleteDialog && (
                 <DeleteRoleAlertDialog
                     role={role}
-                    open={showDeleteDialog}
-                    onOpenChange={handleShowDeleteDialog}
+                    open={deleteDialog}
+                    onOpenChange={setDeleteDialog}
                 />
             )}
         </>

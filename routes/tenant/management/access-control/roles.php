@@ -6,5 +6,6 @@ use Illuminate\Support\Facades\Route;
 Route::resource('roles', RoleController::class)->only(
     'index',
     'store',
+    'update',
     'destroy',
 );

@@ -68,7 +68,6 @@ export function CreateRoleDialog() {
                                 <Button
                                     type="submit"
                                     disabled={processing}
-                                    onSubmit={(e) => e.preventDefault()}
                                     tabIndex={3}
                                 >
                                     {processing && <Spinner />}

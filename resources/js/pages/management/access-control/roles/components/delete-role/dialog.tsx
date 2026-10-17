@@ -19,7 +19,7 @@ import { Spinner } from '@/components/ui/spinner';
 type DeleteProps = {
     open: boolean;
     role: Role;
-    onOpenChange: () => void;
+    onOpenChange: (open: boolean) => void;
 };
 
 export function DeleteRoleAlertDialog({
@@ -40,7 +40,7 @@ export function DeleteRoleAlertDialog({
                         This action cannot be undone.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
-                <Form {...roles.destroy.form({ role: role.uuid })}>
+                <Form {...roles.destroy.form(role.uuid)}>
                     {({ processing }) => (
                         <AlertDialogFooter>
                             <AlertDialogCancel variant="outline">
