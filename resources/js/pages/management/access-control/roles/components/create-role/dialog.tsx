@@ -16,10 +16,13 @@ import {
 import { Plus } from 'lucide-react';
 import roles from '@/routes/management/access-control/roles';
 import { Spinner } from '@/components/ui/spinner';
+import { useState } from 'react';
 
 export function CreateRoleDialog() {
+    const [open, setOpen] = useState<boolean>(false);
+
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button className="gap-2">
                     <Plus data-icon="inline-start" />
@@ -39,6 +42,7 @@ export function CreateRoleDialog() {
                     {...roles.store.form()}
                     resetOnSuccess={['name', 'description']}
                     className="flex flex-col gap-4"
+                    onSuccess={() => setOpen((prev) => !prev)}
                 >
                     {({ processing, errors }) => (
                         <>

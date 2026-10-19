@@ -79,7 +79,7 @@ export function UpdateRoleDialog({
                                     tabIndex={3}
                                 >
                                     {processing && <Spinner />}
-                                    Save changes
+                                    Update changes
                                 </Button>
                             </DialogFooter>
                         </>

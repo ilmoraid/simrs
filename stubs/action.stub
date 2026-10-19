@@ -2,8 +2,14 @@
 
 namespace {{ namespace }};
 
+use App\Actions\Concerns\HandlesSafeExecution;
+use App\Actions\Concerns\HandlesTransactions;
+
 final class {{ class }}
 {
+    use HandlesSafeExecution;
+    use HandlesTransactions;
+
     public function execute(): void
     {
         //

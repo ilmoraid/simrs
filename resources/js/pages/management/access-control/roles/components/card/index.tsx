@@ -29,6 +29,8 @@ import { UserAvatars } from './user-avatar';
 import { useState } from 'react';
 import { DeleteRoleAlertDialog } from '../delete-role/dialog';
 import { UpdateRoleDialog } from '../update-role/dialog';
+import { Link } from '@inertiajs/react';
+import roles from '@/routes/management/access-control/roles';
 
 type RoleCardProps = {
     role: Role;
@@ -159,8 +161,11 @@ export function RoleCard({ role, totalPermission }: RoleCardProps) {
                         variant="ghost"
                         size="sm"
                         className="-mr-2 gap-1 text-primary"
+                        asChild
                     >
-                        View details <ChevronDown className="-rotate-90" />
+                        <Link href={roles.show(role.uuid)}>
+                            View details <ChevronDown className="-rotate-90" />
+                        </Link>
                     </Button>
                 </CardFooter>
             </Card>
